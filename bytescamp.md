@@ -63,3 +63,27 @@ Data Preprocessing 里面就有 教你怎么生成假数据. The output will be 
 
 先看两个blog, 然后运行这个. 
 
+
+
+
+
+8.1
+
+
+
+8.2
+
+[Megatron-LM GPT2 - DeepSpeed](https://www.deepspeed.ai/tutorials/megatron/) 
+
+这个已经跑通了. 
+
+要把数据下载到 `DeepSpeedExamples/Megatron-LM/data`:
+
+
+
+计算参数量. 
+
+
+
+
+
