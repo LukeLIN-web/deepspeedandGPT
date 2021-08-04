@@ -49,7 +49,6 @@ Data Preprocessing 里面就有 教你怎么生成假数据. The output will be 
 
 先看两个blog, 然后运行这个. 
 
-<<<<<<< HEAD
 运行
 =======
 8.2
@@ -64,15 +63,29 @@ Data Preprocessing 里面就有 教你怎么生成假数据. The output will be 
 
 怎么说DL 有可解释性?
 
-
+ broadcast，  allreduce 把所有数据加起来取平均， allgather， 
 
 怎么解决问题？ 
 
 首先是 mentor说你们可以尝试 `torch.disturbition` 和 multiple 矩阵乘法两个api  ，相乘两个 50000*50000 的矩阵， 一个矩阵10g内存，放在同一个GPU上，它显存就会爆炸。  希望把它分放到两个GPU上运行。如果放在两个GPU上它就不工作，
 
- 多线程的方法：   一个cpu多个线程，    操控多个GPU来计算 A 矩阵划分为1/8， B 每个GPU都放一个，45秒。
+ 多线程的方法：   一个cpu多个线程，    操控多个GPU来计算 A 矩阵划分为1/8， B 每个GPU都放一个，45秒。 队友就尝试了一万， 十万的矩阵。
 
- 他们就尝试了一万， 十万的矩阵。
+
+
+可以查询每个拓扑结构
+
+GPU 和GPU 连接用NVlink，600GB/s 。   
+
+CPU 和GPU  用 PCIe， 16GB/s 
+
+CPU和CPU 用QPI
+
+网卡 NIC 经过交换机到另一个网卡，  10Gb/s
+
+
+
+
 
 
 
@@ -90,7 +103,7 @@ GPU 的参数缓存offload到内存。
 
 华为盘古， 阿里和清华合作， 做了上百亿参数的模型。 
 
-一万张v100.  训练一次一千万美元。 
+有的训练用一万张v100.  训练一次一千万美元。 
 
 有哪些optimizetion， 一个个打开。
 
@@ -105,7 +118,5 @@ GPU 的参数缓存offload到内存。
 3. offload是 把中间结果 gpu上没用到的中间结果 swap到cpu上， 用到再取回来。
 
 4. checkpoint是 中间结果占据了显存， 我们丢掉中间结果，需要用到的时候， 从第六个tensor 开始算 ，也就是从他最近的那个checkpoint 重新计算。  时间换空间。 
-5. zero stage 1 2 3     ，stage =3的时候会慢， 把parameter swap 到内存上， 可以训练很大的模型 。   google 把训练好的bert给大家， 大家fine tune 一下就可以了。
-
->>>>>>> 30c80917670cb0edefa2db7908911ee0c32e7a07
+5. zero stage 1 2 3     ，stage =3的时候会慢， 把parameter swap 到内存上， 可以训练很大的模型 。   google 把训练好的bert给大家，普通人没有这么大的算力来预训练， 大家fine tune 一下就可以了。
 
