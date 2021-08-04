@@ -108,3 +108,4 @@ GPU 的参数缓存offload到内存。
 5. zero stage 1 2 3     ，stage =3的时候会慢， 把parameter swap 到内存上， 可以训练很大的模型 。   google 把训练好的bert给大家， 大家fine tune 一下就可以了。
 
 >>>>>>> 30c80917670cb0edefa2db7908911ee0c32e7a07
+
