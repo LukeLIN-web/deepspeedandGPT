@@ -83,12 +83,6 @@ CPU和CPU 用QPI
 
 网卡 NIC 经过交换机到另一个网卡，  10Gb/s
 
-
-
-
-
-
-
 ### deepspeed的加速
 
 隐藏 ， 流水线， 计算第一层同时从cpu取第二层参数， 8月3日1.5B 十五亿可以。 阿里最顶尖的机器， 8张v100。
@@ -119,4 +113,53 @@ GPU 的参数缓存offload到内存。
 
 4. checkpoint是 中间结果占据了显存， 我们丢掉中间结果，需要用到的时候， 从第六个tensor 开始算 ，也就是从他最近的那个checkpoint 重新计算。  时间换空间。 
 5. zero stage 1 2 3     ，stage =3的时候会慢， 把parameter swap 到内存上， 可以训练很大的模型 。   google 把训练好的bert给大家，普通人没有这么大的算力来预训练， 大家fine tune 一下就可以了。
+
+
+
+输入weight和activation ，GPU 可以存下这个变量就可以训练了。  
+
+
+
+8个GPU 分一层， 一个GPU 有一层的1/8 . GPU 显存可以   容纳一层的 1/8 是极限了. 
+
+conv 计算量大， 就checkpoint， 重算计算量小的但是占据显存大的relu和pool层。 
+
+每个 GPU 只有16G 显存， 放不下所有参数， 所以参数更新是到CPU上。 
+
+
+
+HDD磁盘交换速度很慢。 需要NVME磁盘。
+
+实现方式： 
+
+1. 梯度累积是  forward， backward， 最后update
+2.  混合精度fp16， torch 可以直接 mix 混合精度
+3. torch每一层提供了hook ， 可以fork to cuda ， fork to cpu 。
+4. 
+
+本次我们实验使用的机器配置磁盘空间不足. 
+
+本次项目实践中由于阿里云的硬盘不支持, 所以没能实践. 
+
+
+
+
+
+我们大参数很慢， 但是fine-tuning不需要多快。 
+
+
+
+本来 150亿参数需要多大？   pytorch  DDP  单机7亿。 
+
+极限怎么算出来？ 
+
+
+
+混合精度训练
+
+fp16 参数， fp16的梯度， fp32的参数，fp32的梯度，  fp32优化器里的状态比如动量和方差（默认fp32可以开 fp16），  一个参数对应20个字节。  15billion 参数。  
+
+activation 就是 激活显存。 
+
+
 
